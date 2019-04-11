@@ -1,5 +1,4 @@
-from nose.plugins.attrib import attr
-from test.integration.base import DBTIntegrationTest
+from test.integration.base import DBTIntegrationTest, use_profile
 import dbt.exceptions
 
 
@@ -58,7 +57,7 @@ class TestSimpleArchive(DBTIntegrationTest):
     def assert_expected(self):
         self.assert_case_tables_equal('archive_actual', 'archive_expected')
 
-    @attr(type='postgres')
+    @use_profile('postgres')
     def test__postgres__simple_archive(self):
         self.dbt_run_seed_archive()
 
@@ -72,7 +71,7 @@ class TestSimpleArchive(DBTIntegrationTest):
 
         self.assert_expected()
 
-    @attr(type='snowflake')
+    @use_profile('snowflake')
     def test__snowflake__simple_archive(self):
         self.dbt_run_seed_archive()
 
@@ -86,7 +85,7 @@ class TestSimpleArchive(DBTIntegrationTest):
 
         self.assert_expected()
 
-    @attr(type='redshift')
+    @use_profile('redshift')
     def test__redshift__simple_archive(self):
         self.dbt_run_seed_archive()
 
@@ -100,7 +99,7 @@ class TestSimpleArchive(DBTIntegrationTest):
 
         self.assert_expected()
 
-    @attr(type='presto')
+    @use_profile('presto')
     def test__presto__simple_archive_disabled(self):
         results = self.run_dbt(["seed"])
         self.assertEqual(len(results),  self.NUM_ARCHIVE_MODELS)
@@ -142,7 +141,7 @@ class TestSimpleArchiveBigquery(DBTIntegrationTest):
     def assert_expected(self):
         self.assertTablesEqual('archive_actual', 'archive_expected')
 
-    @attr(type='bigquery')
+    @use_profile('bigquery')
     def test__bigquery__simple_archive(self):
         self.use_default_project()
         self.use_profile('bigquery')
@@ -161,7 +160,7 @@ class TestSimpleArchiveBigquery(DBTIntegrationTest):
         self.assert_expected()
 
 
-    @attr(type='bigquery')
+    @use_profile('bigquery')
     def test__bigquery__archive_with_new_field(self):
         self.use_default_project()
         self.use_profile('bigquery')
@@ -250,7 +249,7 @@ class TestCrossDBArchive(DBTIntegrationTest):
     def run_archive(self):
         return self.run_dbt(['archive'])
 
-    @attr(type='snowflake')
+    @use_profile('snowflake')
     def test__snowflake__cross_archive(self):
         self.run_sql_file("test/integration/004_simple_archive_test/seed.sql")
 
@@ -267,7 +266,7 @@ class TestCrossDBArchive(DBTIntegrationTest):
 
         self.assertTablesEqual("ARCHIVE_EXPECTED", "ARCHIVE_ACTUAL", table_b_db=self.alternative_database)
 
-    @attr(type='bigquery')
+    @use_profile('bigquery')
     def test__bigquery__cross_archive(self):
         self.run_sql_file("test/integration/004_simple_archive_test/seed_bq.sql")
 
@@ -291,7 +290,7 @@ class TestSimpleArchiveFiles(TestSimpleArchive):
             "archive-paths": ['test/integration/004_simple_archive_test/test-archives-pg'],
         }
 
-    @attr(type='postgres')
+    @use_profile('postgres')
     def test__postgres_ref_archive(self):
         self.dbt_run_seed_archive()
         results = self.run_dbt(['run'])
@@ -315,7 +314,7 @@ class TestSimpleArchiveFileSelects(DBTIntegrationTest):
                               'test/integration/004_simple_archive_test/test-archives-pg'],
         }
 
-    @attr(type='postgres')
+    @use_profile('postgres')
     def test__postgres__select_archives(self):
         self.run_sql_file('test/integration/004_simple_archive_test/seed.sql')
 
@@ -336,7 +335,7 @@ class TestSimpleArchiveFileSelects(DBTIntegrationTest):
         self.assertTablesEqual('archive_kelly', 'archive_kelly_expected')
         self.assertTablesEqual('archive_actual', 'archive_expected')
 
-    @attr(type='postgres')
+    @use_profile('postgres')
     def test__postgres_exclude_archives(self):
         self.run_sql_file('test/integration/004_simple_archive_test/seed.sql')
         results = self.run_dbt(['archive', '--exclude', 'archive_castillo'])
@@ -346,7 +345,7 @@ class TestSimpleArchiveFileSelects(DBTIntegrationTest):
         self.assertTablesEqual('archive_kelly', 'archive_kelly_expected')
         self.assertTablesEqual('archive_actual', 'archive_expected')
 
-    @attr(type='postgres')
+    @use_profile('postgres')
     def test__postgres_select_archives(self):
         self.run_sql_file('test/integration/004_simple_archive_test/seed.sql')
         results = self.run_dbt(['archive', '--models', 'archive_castillo'])
@@ -395,7 +394,7 @@ class TestBadArchive(DBTIntegrationTest):
             "archive-paths": ['test/integration/004_simple_archive_test/test-archives-invalid'],
         }
 
-    @attr(type='postgres')
+    @use_profile('postgres')
     def test__postgres__invalid(self):
         with self.assertRaises(dbt.exceptions.CompilationException) as exc:
             self.run_dbt(['compile'], expect_pass=False)
@@ -451,7 +450,7 @@ class TestCheckColsBigquery(TestSimpleArchiveFilesBigquery):
             "archive-paths": ['test/integration/004_simple_archive_test/test-check-col-archives-bq'],
         }
 
-    @attr(type='bigquery')
+    @use_profile('bigquery')
     def test__bigquery__archive_with_new_field(self):
         self.use_default_project()
         self.use_profile('bigquery')
