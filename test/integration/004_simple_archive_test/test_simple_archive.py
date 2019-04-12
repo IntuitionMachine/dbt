@@ -34,8 +34,8 @@ class TestSimpleArchive(DBTIntegrationTest):
                         {
                             "source_table": source_table,
                             "target_table": "archive_actual",
-                            "updated_at": '"updated_at"',
-                            "unique_key": '''"id" || '-' || "first_name"'''
+                            "updated_at": 'updated_at',
+                            "unique_key": '''id || '-' || first_name'''
                         },
                     ],
                 },
@@ -223,8 +223,8 @@ class TestCrossDBArchive(DBTIntegrationTest):
             return {
                 "source_table": 'SEED',
                 "target_table": "archive_actual",
-                "updated_at": '"updated_at"',
-                "unique_key": '''"id" || '-' || "first_name"'''
+                "updated_at": 'updated_at',
+                "unique_key": '''id || '-' || first_name'''
             }
         else:
             return {

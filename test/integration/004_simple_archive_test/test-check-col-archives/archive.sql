@@ -4,7 +4,7 @@
         config(
             target_database=var('target_database', database),
             target_schema=schema,
-            unique_key='"id" || ' ~ "'-'" ~ ' || "first_name"',
+            unique_key='id || ' ~ "'-'" ~ ' || first_name',
             strategy='check',
             check_cols=['email'],
         )
@@ -19,7 +19,7 @@
         config(
             target_database=var('target_database', database),
             target_schema=schema,
-            unique_key='"id" || ' ~ "'-'" ~ ' || "first_name"',
+            unique_key='id || ' ~ "'-'" ~ ' || first_name',
             strategy='check',
             check_cols='all',
         )
