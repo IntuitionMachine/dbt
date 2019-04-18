@@ -7,7 +7,7 @@
 {% endmacro %}
 
 {% macro default__archive_hash_arguments(args) %}
-    md5({% for arg in args %}{{ arg }}{% if not loop.last %} || '|' || {% endif %}{% endfor %})
+    md5({% for arg in args %}coalesce(cast({{ arg }} as varchar ), '') {% if not loop.last %} || '|' || {% endif %}{% endfor %})
 {% endmacro %}
 
 {% macro create_temporary_table(sql, relation) %}
